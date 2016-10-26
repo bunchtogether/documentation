@@ -122,6 +122,12 @@ function _copy() {
     .pipe(gulp.dest('./docs'))
     .on('error', log);
 
+  // copy .nojekyll file
+  gulp
+    .src(['./src/main/html/.nojekyll'])
+    .pipe(gulp.dest('./docs'))
+    .on('error', log);
+
 }
 gulp.task('dev-copy', ['dev-less', 'copy-local-specs'], _copy);
 

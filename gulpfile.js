@@ -24,11 +24,11 @@ var banner = ['/**',
   ''].join('\n');
 
 /**
- * Clean ups ./dist folder
+ * Clean ups ./docs folder
  */
 gulp.task('clean', function() {
   return gulp
-    .src('./dist', {read: false})
+    .src('./docs', {read: false})
     .pipe(clean({force: true}))
     .on('error', log);
 });
@@ -62,12 +62,12 @@ function _dist() {
     .pipe(concat('swagger-ui.js'))
     .pipe(wrap('(function(){<%= contents %>}).call(this);'))
     .pipe(header(banner, { pkg: pkg }))
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('./docs'))
     .pipe(uglify())
     .on('error', log)
     .pipe(rename({extname: '.min.js'}))
     .on('error', log)
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('./docs'))
     .pipe(connect.reload());
 }
 gulp.task('dev-dist', ['lint', 'dev-copy'], _dist);
@@ -101,19 +101,19 @@ function _copy() {
     .src(['./lib/**/*.{js,map}',
         './node_modules/es5-shim/es5-shim.js'
     ])
-    .pipe(gulp.dest('./dist/lib'))
+    .pipe(gulp.dest('./docs/lib'))
     .on('error', log);
 
   // copy `lang` for translations
   gulp
     .src(['./lang/**/*.js'])
-    .pipe(gulp.dest('./dist/lang'))
+    .pipe(gulp.dest('./docs/lang'))
     .on('error', log);
 
   // copy all files inside html folder
   gulp
     .src(['./src/main/html/**/*'])
-    .pipe(gulp.dest('./dist'))
+    .pipe(gulp.dest('./docs'))
     .on('error', log);
 }
 gulp.task('dev-copy', ['dev-less', 'copy-local-specs'], _copy);
@@ -122,7 +122,7 @@ gulp.task('copy-local-specs', function () {
   // copy the test specs
   return gulp
     .src(['./test/specs/**/*'])
-    .pipe(gulp.dest('./dist/specs'))
+    .pipe(gulp.dest('./docs/specs'))
     .on('error', log);
 });
 
@@ -145,7 +145,7 @@ gulp.task('watch', ['copy-local-specs'], function() {
  */
 gulp.task('connect', function() {
   connect.server({
-    root: 'dist',
+    root: 'docs',
     livereload: true
   });
 });

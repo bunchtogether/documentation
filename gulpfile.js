@@ -115,6 +115,13 @@ function _copy() {
     .src(['./src/main/html/**/*'])
     .pipe(gulp.dest('./docs'))
     .on('error', log);
+
+  // copy swagger files
+  gulp
+    .src(['./swagger/*'])
+    .pipe(gulp.dest('./docs'))
+    .on('error', log);
+
 }
 gulp.task('dev-copy', ['dev-less', 'copy-local-specs'], _copy);
 

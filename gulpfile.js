@@ -14,7 +14,6 @@ var header = require('gulp-header');
 var order = require('gulp-order');
 var jshint = require('gulp-jshint');
 var pkg = require('./package.json');
-var yaml = require('gulp-yaml');
 
 var banner = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
@@ -117,10 +116,11 @@ function _copy() {
     .pipe(gulp.dest('./docs'))
     .on('error', log);
 
-  // convert and copy swagger files
-  gulp.src('./swagger/*.yml')
-    .pipe(yaml({ schema: 'DEFAULT_SAFE_SCHEMA' }))
+  // copy .yaml file
+  gulp
+    .src(['./swagger/*.yaml'])
     .pipe(gulp.dest('./docs'))
+    .on('error', log);
 
   // copy .nojekyll file
   gulp
@@ -129,24 +129,24 @@ function _copy() {
     .on('error', log);
 
 }
-gulp.task('dev-copy', ['dev-less', 'copy-local-specs'], _copy);
+gulp.task('dev-copy', ['dev-less', 'copy-local-swagger'], _copy);
 
-gulp.task('copy-local-specs', function () {
+gulp.task('copy-local-swagger', function () {
   // copy the test specs
   return gulp
-    .src(['./test/specs/**/*'])
-    .pipe(gulp.dest('./docs/specs'))
+    .src(['./swagger/*.yaml'])
+    .pipe(gulp.dest('./docs'))
     .on('error', log);
 });
 
 /**
  * Watch for changes and recompile
  */
-gulp.task('watch', ['copy-local-specs'], function() {
+gulp.task('watch', ['copy-local-swagger'], function() {
   return watch([
     './src/**/*.{js,less,handlebars}',
     './src/main/html/*.html',
-    './test/specs/**/*.{json,yaml}'
+    './swagger/*.yaml'
     ],
     function() {
       gulp.start('dev-dist');

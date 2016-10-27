@@ -14,6 +14,7 @@ var header = require('gulp-header');
 var order = require('gulp-order');
 var jshint = require('gulp-jshint');
 var pkg = require('./package.json');
+var merge = require('merge-stream');
 
 var banner = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
@@ -96,38 +97,13 @@ gulp.task('dev-less', _less);
  */
 gulp.task('copy', ['less'], _copy);
 function _copy() {
-  // copy JavaScript files inside lib folder
-  gulp
-    .src(['./lib/**/*.{js,map}',
-        './node_modules/es5-shim/es5-shim.js'
-    ])
-    .pipe(gulp.dest('./docs/lib'))
-    .on('error', log);
-
-  // copy `lang` for translations
-  gulp
-    .src(['./lang/**/*.js'])
-    .pipe(gulp.dest('./docs/lang'))
-    .on('error', log);
-
-  // copy all files inside html folder
-  gulp
-    .src(['./src/main/html/**/*'])
-    .pipe(gulp.dest('./docs'))
-    .on('error', log);
-
-  // copy .yaml file
-  gulp
-    .src(['./swagger/*.yaml'])
-    .pipe(gulp.dest('./docs'))
-    .on('error', log);
-
-  // copy .nojekyll file
-  gulp
-    .src(['./src/main/html/.nojekyll'])
-    .pipe(gulp.dest('./docs'))
-    .on('error', log);
-
+  return merge(
+    gulp.src(['./lib/**/*.{js,map}','./node_modules/es5-shim/es5-shim.js']).pipe(gulp.dest('./docs/lib')).on('error', log),
+    gulp.src(['./lang/**/*.js']).pipe(gulp.dest('./docs/lang')).on('error', log),
+    gulp.src(['./src/main/html/**/*']).pipe(gulp.dest('./docs')).on('error', log),
+    gulp.src(['./swagger/*.yaml']).pipe(gulp.dest('./docs')).on('error', log),
+    gulp.src(['./src/main/html/.nojekyll']).pipe(gulp.dest('./docs')).on('error', log)
+  );
 }
 gulp.task('dev-copy', ['dev-less', 'copy-local-swagger'], _copy);
 

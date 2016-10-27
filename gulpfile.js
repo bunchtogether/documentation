@@ -144,7 +144,7 @@ function log(error) {
 }
 
 gulp.task('handlebars', function () {
-    gulp
+    return gulp
         .src(['./src/main/template/templates.js'])
         .pipe(wrap('/* jshint ignore:start */ \n {<%= contents %>} \n /* jshint ignore:end */'))
         .pipe(gulp.dest('./src/main/template/'))

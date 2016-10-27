@@ -14,6 +14,7 @@ var header = require('gulp-header');
 var order = require('gulp-order');
 var jshint = require('gulp-jshint');
 var pkg = require('./package.json');
+var yaml = require('gulp-yaml');
 
 var banner = ['/**',
   ' * <%= pkg.name %> - <%= pkg.description %>',
@@ -116,11 +117,10 @@ function _copy() {
     .pipe(gulp.dest('./docs'))
     .on('error', log);
 
-  // copy swagger files
-  gulp
-    .src(['./swagger/*'])
+  // convert and copy swagger files
+  gulp.src('./swagger/*.yml')
+    .pipe(yaml({ schema: 'DEFAULT_SAFE_SCHEMA' }))
     .pipe(gulp.dest('./docs'))
-    .on('error', log);
 
   // copy .nojekyll file
   gulp

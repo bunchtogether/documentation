@@ -102,7 +102,8 @@ function _copy() {
     gulp.src(['./lang/**/*.js']).pipe(gulp.dest('./docs/lang')).on('error', log),
     gulp.src(['./src/main/html/**/*']).pipe(gulp.dest('./docs')).on('error', log),
     gulp.src(['./swagger/*.yaml']).pipe(gulp.dest('./docs')).on('error', log),
-    gulp.src(['./src/main/html/.nojekyll']).pipe(gulp.dest('./docs')).on('error', log)
+    gulp.src(['./src/main/html/.nojekyll']).pipe(gulp.dest('./docs')).on('error', log),
+    gulp.src(['./src/main/html/CNAME']).pipe(gulp.dest('./docs')).on('error', log)
   );
 }
 gulp.task('dev-copy', ['dev-less', 'copy-local-swagger'], _copy);
